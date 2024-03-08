@@ -9,6 +9,7 @@ const db = firebase.firestore();
 interface SpeedData {
   datetime: string;
   speed: number;
+  date: any;
 }
 
 const Heatmap: React.FC = () => {
@@ -32,8 +33,8 @@ const Heatmap: React.FC = () => {
               const datetime = new Date(doc.data().datetime.toDate()); // Convert timestamp to Date
               const day = datetime.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(); // Get day
               const hour = datetime.getHours(); // Get hour
-              data.push({ datetime: `${day}-${hour}`, speed: doc.data().speed }); // Combine day and hour
-            });
+              data.push({ datetime: `${day}-${hour}`, speed: doc.data().speed,date: datetime }); // Combine day and hour
+            })
             setSpeedData(data);
           });
       } catch (error) {
@@ -168,9 +169,9 @@ const Heatmap: React.FC = () => {
                   >
                     {/* Render speed data or any other content */}
                     {hoveredCell?.day === day && hoveredCell?.hour === hour && speedRecord && (
-                      <div className="absolute z-10 rounded rounded-lg bg-blue-700 p-2 text-white shadow-md">
-                        <div>Date: {speedRecord.datetime}</div>
-                        <div>Speed: {speedRecord.speed} km/hr</div>
+                      <div className="absolute z-10 rounded rounded-lg bg-blue-700 p-2 text-white text-left shadow-md">
+                        <div>Date: {new Date(speedRecord.date).toLocaleDateString('en-GB')}</div>
+                        <div>Speed: {speedRecord.speed.toFixed(2)} km/hr</div>
                       </div>
                     )}
                   </div>
