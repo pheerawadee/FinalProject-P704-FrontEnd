@@ -7,6 +7,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 interface SpeedData {
+  id: String;
   datetime: string;
   speed: number;
   date: any;
@@ -30,10 +31,12 @@ const Heatmap: React.FC = () => {
           .onSnapshot(snapshot => {
             const data: SpeedData[] = [];
             snapshot.forEach(doc => {
+              const docId = doc.id; // Get document ID
               const datetime = new Date(doc.data().datetime.toDate()); // Convert timestamp to Date
+              datetime.setHours(datetime.getHours() - 7); // Adjust to GMT+7
               const day = datetime.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(); // Get day
               const hour = datetime.getHours(); // Get hour
-              data.push({ datetime: `${day}-${hour}`, speed: doc.data().speed,date: datetime }); // Combine day and hour
+              data.push({ id: docId, datetime: `${day}-${hour}`, speed: doc.data().speed, date: datetime }); // Combine day and hour
             })
             setSpeedData(data);
           });
@@ -41,6 +44,7 @@ const Heatmap: React.FC = () => {
         console.error('Error fetching data:', error);
       }
     };
+    
 
     fetchData();
 
@@ -63,8 +67,8 @@ const Heatmap: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []); // Run only once on component mount
 
-  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const hours = Array.from({ length: 16 }, (_, i) => i + 7); // 07.00-22.00
+  const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const hours = Array.from({ length: 15 }, (_, i) => i + 8); // 08.00-22.00
 
   const handleMonthChange = (increment: number) => {
     setSelectedMonth(prevMonth => (prevMonth + increment + 12) % 12); // Ensure it loops around to 0 when going before January
@@ -151,9 +155,9 @@ const Heatmap: React.FC = () => {
                 let bgColor = 'bg-gray-200'; // Default color
                 if (speedRecord) {
                   // Determine background color based on speed
-                  if (speedRecord.speed >= 30) {
+                  if (speedRecord.speed >= 12) {
                     bgColor = 'bg-green-500';
-                  } else if (speedRecord.speed >= 20) {
+                  } else if (speedRecord.speed >= 7) {
                     bgColor = 'bg-yellow-500';
                   } else {
                     bgColor = 'bg-red-500';
@@ -170,7 +174,9 @@ const Heatmap: React.FC = () => {
                     {/* Render speed data or any other content */}
                     {hoveredCell?.day === day && hoveredCell?.hour === hour && speedRecord && (
                       <div className="absolute z-10 rounded rounded-lg bg-blue-700 p-2 text-white text-left shadow-md">
+                        {/* <div>ID: {(speedRecord.id)}</div> */}
                         <div>Date: {new Date(speedRecord.date).toLocaleDateString('en-GB')}</div>
+                        {/* <div>Time: {(speedRecord.datetime)}</div> */}
                         <div>Speed: {speedRecord.speed.toFixed(2)} km/hr</div>
                       </div>
                     )}
