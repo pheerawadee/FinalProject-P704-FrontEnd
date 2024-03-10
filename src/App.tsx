@@ -1,7 +1,6 @@
 // App.tsx
 import React from 'react';
 import Heatmap from './table';
-import FirstSemester from './FirstSemester';
 
 const App: React.FC = () => {
   const containerStyle: React.CSSProperties = {
