@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import firebase from 'firebase/compat/app'; // Import firebase/compat/app
-import 'firebase/compat/firestore'; // Import firebase/compat/firestore
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 import firebaseConfig from './firebaseConfig';
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 interface SpeedData {
+  id: String;
   datetime: string;
   speed: number;
   date: any;
@@ -30,10 +31,12 @@ const Heatmap: React.FC = () => {
           .onSnapshot(snapshot => {
             const data: SpeedData[] = [];
             snapshot.forEach(doc => {
+              const docId = doc.id; // Get document ID
               const datetime = new Date(doc.data().datetime.toDate()); // Convert timestamp to Date
+              datetime.setHours(datetime.getHours() - 7); // Adjust to GMT+7
               const day = datetime.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(); // Get day
               const hour = datetime.getHours(); // Get hour
-              data.push({ datetime: `${day}-${hour}`, speed: doc.data().speed,date: datetime }); // Combine day and hour
+              data.push({ id: docId, datetime: `${day}-${hour}`, speed: doc.data().speed, date: datetime }); // Combine day and hour
             })
             setSpeedData(data);
           });
@@ -63,8 +66,8 @@ const Heatmap: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []); // Run only once on component mount
 
-  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const hours = Array.from({ length: 16 }, (_, i) => i + 7); // 07.00-22.00
+  const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const hours = Array.from({ length: 15 }, (_, i) => i + 8); // 08.00-22.00
 
   const handleMonthChange = (increment: number) => {
     setSelectedMonth(prevMonth => (prevMonth + increment + 12) % 12); // Ensure it loops around to 0 when going before January
@@ -81,16 +84,16 @@ const Heatmap: React.FC = () => {
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
     const currentWeek = Math.ceil((currentDate.getDate() + new Date(currentYear, currentMonth, 1).getDay()) / 7);
-  
+
     setSelectedMonth(currentMonth);
     setSelectedYear(currentYear);
     setSelectedWeek(currentWeek);
   };
-  
+
   const isCurrentHour = (dayIndex: number, hour: number) => {
     const currentDateTime = new Date();
     return (
-      currentDateTime.getDay() === dayIndex && 
+      currentDateTime.getDay() === dayIndex &&
       currentDateTime.getHours() === hour &&
       currentDateTime.getMonth() === selectedMonth &&
       currentDateTime.getFullYear() === selectedYear &&
@@ -106,9 +109,31 @@ const Heatmap: React.FC = () => {
     setHoveredCell(null);
   };
 
+  const getSemester = () => {
+    const yearStartMonth = 7; // July
+    const yearEndMonth = 6; // June
+  
+    const adjustedMonth = (selectedMonth + 12 - yearStartMonth) % 12;
+  
+    if (adjustedMonth >= 0 && adjustedMonth <= 3) {
+      return `1st Semester (July - October)`;
+    } else if (adjustedMonth >= 4 && adjustedMonth <= 7) {
+      return `2nd Semester (November - March)`;
+    } else {
+      return `Summer Semester (April - June)`;
+    }
+  };
+  
+  
+
   return (
     <div className="relative flex justify-center items-center">
       <div className="w-full max-w-4xl">
+        {/* Semester information */}
+        <div className="text-center mb-4">
+          <h2 className="text-lg font-bold">{getSemester()}</h2>
+        </div>
+
         {/* Month and year selection */}
         <div className="flex justify-center items-center mb-5 sm:mb-10">
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1" onClick={() => handleMonthChange(-1)}>{`⊲`}</button>
@@ -116,7 +141,7 @@ const Heatmap: React.FC = () => {
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => handleMonthChange(1)}>{`⊳`}</button>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleTodayClick}>Today</button>
         </div>
-        
+
         {/* Week selection */}
         <div className="flex justify-center items-center">
           {[...Array(5)].map((_, weekIndex) => (
@@ -139,7 +164,7 @@ const Heatmap: React.FC = () => {
               {day}
             </div>
           ))}
-          
+
           {/* Render heatmap */}
           {hours.map(hour => (
             <Fragment key={hour}>
@@ -151,16 +176,16 @@ const Heatmap: React.FC = () => {
                 let bgColor = 'bg-gray-200'; // Default color
                 if (speedRecord) {
                   // Determine background color based on speed
-                  if (speedRecord.speed >= 30) {
+                  if (speedRecord.speed >= 12) {
                     bgColor = 'bg-green-500';
-                  } else if (speedRecord.speed >= 20) {
+                  } else if (speedRecord.speed >= 7) {
                     bgColor = 'bg-yellow-500';
                   } else {
                     bgColor = 'bg-red-500';
                   }
                 }
                 const cellClasses = `text-center text-white text-sm p-1 ${bgColor} aspect-w-1 aspect-h-1 ${isCurrentHour(dayIndex, hour) ? 'border border-blue-500' : ''}`;
-                return ( 
+                return (
                   <div
                     key={`${day}-${hour}`}
                     className={cellClasses}

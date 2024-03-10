@@ -1,0 +1,8 @@
+/* style.css */
+body {
+    background-image: url("../src/cmu-vir.jpeg");
+    background-size: cover;
+    background-position: center;
+    margin: 0; /* To remove default margin */
+  }
+  
