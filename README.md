@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+## CMU Transit
+This project addresses traffic congestion issues within the Chiang Mai University campus. It aims to develop an intelligent traffic monitoring system using machine learning algorithms to optimize traffic flow at intersections. The system will improve travel times for the CMU community, enhance safety, and contribute to a more positive campus experience.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Getting Started
+**Prerequisites:**
 
-## Available Scripts
+Node.js and npm (or yarn) installed on your system.
+https://nodejs.org
 
-In the project directory, you can run:
+## Installation Steps
+1. Clone this repository:
+   
+   git clone https://github.com/pheerawadee/FinalProject
 
-### `npm start`
+3. Navigate to the project directory:
+   
+    cd FinalProject
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+5. Install dependencies:
+   
+   npm install
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## How to Use
 
-### `npm test`
+1. npm start </br>
+ _This will typically launch your React development server (usually on http://localhost:3000)_
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Accessing Dataset Analysis with Colab
 
-### `npm run build`
+1. Accessing the Notebook, please Ask for the permission to editing
+   https://colab.research.google.com/drive/1H88naHxW8a_OIDEFhzJYPloTAJAe9e6e?usp=sharing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+We welcome contributions to the CMU Transit project! Here are a few ways you can help:
 
-### `npm run eject`
+Reporting Issues: If you find a bug or have a suggestion for improvement, please open an issue on the project's GitHub repository. Be sure to include clear steps to reproduce the issue and any relevant screenshots or error messages.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Submitting Pull Requests: If you'd like to directly contribute code changes, please follow these steps:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1.Fork the repository. </br>
+2.Create a new branch for your changes </br>
+3.Make your changes, following any existing code style guidelines. </br>
+4.Thoroughly test your changes. </br>
+5.Open a pull request with a clear description of your changes. </br>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Reviewing Code: Help us maintain code quality by reviewing pull requests from other contributors. Offer constructive feedback and suggestions for improvement.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Contact: </br>
+Pheerawadee Chantakhat: peerawadee4426@gmail.com </br>
+Sorawich Yeampraseot: sorawichx8@gmail.com
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+   
